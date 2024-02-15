@@ -1,96 +1,85 @@
 <template>
-    <div class="container">
-   <p>Lesson component</p>
-   <P>{{lessons}}</P>
-    </div>
+   <div  class="lessonPage">
+        <div class="search-container">
+            <input type="search" placeholder="Type to Search Lessons" v-model="searchText" />
+        </div>
+        <!-- Sort Tags -->
+        <div class="sort-section">
+        
+            <div class="sort-type">
+                <div>
+                    <input type="radio" name="sort" value="subject" id="option1" v-model="sortType" /> <label
+                        for="option1">Subject</label>
+                </div>
+                <div>
+                    <input type="radio" name="sort" value="location" id="option2" v-model="sortType" /> <label
+                        for="option2">Location</label>
+                </div>
+                <div>
+                    <input type="radio" name="sort" value="price" id="option3" v-model="sortType" /> <label
+                        for="option3">Price</label>
+                </div>
+                <div>
+                    <input type="radio" name="sort" value="spaces" id="option4" v-model="sortType" /> <label
+                        for="option4">Spaces</label>
+                </div>
+        
+        
+        
+            </div>
+            <div class="sort-mode">
+                <div>
+                    <input type="radio" name="mode" value="descending" id="descending" v-model="mode" /> <label
+                        for="descending">Descending</label>
+                </div>
+                <div>
+                    <input type="radio" name="mode" value="ascending" id="ascending" v-model="mode" /> <label
+                        for="ascending">Ascending</label>
+                </div>
+        
+            </div>
+        
+        
+        
+        </div>
+        
+        <!-- Lessons section -->
+        <div class="lesson-container">
+            <div class="image-card" v-for="(lesson,key) in lessons" :key="key">
+                <div class="card-image"> <img :src="lesson.image" />
+               
+                </div>
+                <div class="card-text">
+        
+                    <!-- eslint-disable-next-line vue/no-use-v-if-with-v-for -->
+                    <div v-for="(value, key) in lesson" :key="key" v-if="!['id','image'].includes(key)">
+                        <h4 v-if="key ==='price'">{{ key }}: ${{ value }}</h4>
+                        <h4 v-else>{{ key }}: {{ value }}</h4>
+                    </div>
+        
+                </div>
+                <div class="card-button"><button v-bind:disabled="lesson.spaces < 1" v-on:click="addToCart(lesson)">Add to
+                        cart</button></div>
+        
+            </div>
+        </div>
+     </div> 
+     
   </template>
   
   <script>
   export default {
     name: 'HelloWorld',
-    props :["lessons"]
+    props :["lessons"],
+    methods:{
+        // EVEVT Emitter
+        RemoveLesson :()=>{
+            this.$emit("RemoveLesson");
+        }
+    }
   }
   </script>
   
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
-  <style>
-  image-card{
-    height:500px;
-    width:400px;
-    margin-right: 45px;
-    margin-bottom: 75px;
-    overflow: hidden;
-  box-sizing: border-box;
-    border-radius:3%;
-    box-shadow: 0px 0px 10px rgb(42, 42, 46);
-  
-}
-
-.lesson-container{
- 
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    margin:50px 100px;
-
-}
-.card-image{
-    height:50%;
-    width: 100%;
-}
-
-.card-image img{
-width: 100%;
-    height: 100%;
-        object-fit: cover;
-    
-    
-}
-.search-container{
-display: flex;
-align-items: left;
-justify-content: right;
-margin-bottom: 25px; 
-padding: 25px;
-}
-
-.card-text{
-    padding-left: 1rem;
-}
-
-.card-button{
-padding: 1rem;
-    text-align: end;
-}
-
-.card-button  button{
-    padding: 10px 15px;
-    cursor: pointer;
-}
-
-.sort-section {
-    display: flex;width:80%;
-margin: 0px auto; 
-}
-.sort-type{
-    display: flex;
-}
-.sort-type div {
-    padding: 10px 15px;
-}
-.sort-section .sort-type {
-    margin-right:auto;
-}
-
-.sort-section .sort-mode{
-    display: flex;
-}
-
-.sort-section .sort-mode div{
-    padding: 10px 15px;
-}
 
 
-
-  </style>
   

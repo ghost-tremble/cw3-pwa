@@ -1,7 +1,8 @@
 <template>
   <div id="app">  
+    <h1>After School Activities</h1>
     <!-- Disabling the cart only on the lesson Page -->
-    <button class="cart" v-bind:disabled ="cart.length < 1 && currentPage !== 1"  v-on:click = "togglePage()">   
+    <button class="cart">   
             <h3>Cart</h3>
            
             <svg xmlns="http://www.w3.org/2000/svg"
@@ -12,29 +13,30 @@
     <p>{{cart.length}}</p>
        </button>
 
+<!-- // listen for event here 
+// event emitters -->
 
-// listen for event here 
-// event emitters
-       <LessonComponent :lessons="lessons" @removeLesson = "removeLesson"/>
-   <!-- <CheckoutComponent/> -->
+       <!-- <LessonComponent :lessons="lessons" @removeLesson = "removeLesson"/> -->
+   <CheckoutComponent :lessons="lessons"/>
   </div>
 </template>
 
 <script>
-import Lesson from './components/Lesson.vue';
-// import Checkout from './components/Checkout.vue';
+// import Lesson from './components/Lesson.vue';
+import lessons  from  "./lessons"
+import Checkout from './components/Checkout.vue';
 export default {
   name: 'App',
   data() {
     return {
       cart: [],
-      lessons:["lessons"],
+      lessons:lessons,
       msg: 'Welcome to Your Vue.js App'
     }
   },
   components: {
-    LessonComponent :Lesson,
-    // CheckoutComponent :Checkout
+    // LessonComponent :Lesson,
+    CheckoutComponent :Checkout
     
     
   
@@ -42,34 +44,6 @@ export default {
 }
 </script>
 
-<style>
-body{
-    overflow-x: hidden;
-    height: 100vh;
-    width: 100%;
-    box-sizing: border-box;
-    font-family: sans-serif ;
-}
-
-#app h1  {
-    padding: 15px;
-}
-
-.cart{
-    display: flex;
-    padding: 15px 20px;
-    justify-content: space-evenly;
-    align-items: center;
-    width: 120px;
-    margin:10px;
-    border-radius: 4px;
-    box-sizing: border-box;
-    
-    cursor: pointer;
-}
-.cart p{
-    font-size: large;
-}
-
+<style src="./assets/global.css">
 
 </style>
