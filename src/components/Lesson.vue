@@ -1,0 +1,96 @@
+<template>
+    <div class="container">
+   <p>Lesson component</p>
+   <P>{{lessons}}</P>
+    </div>
+  </template>
+  
+  <script>
+  export default {
+    name: 'HelloWorld',
+    props :["lessons"]
+  }
+  </script>
+  
+  <!-- Add "scoped" attribute to limit CSS to this component only -->
+  <style>
+  image-card{
+    height:500px;
+    width:400px;
+    margin-right: 45px;
+    margin-bottom: 75px;
+    overflow: hidden;
+  box-sizing: border-box;
+    border-radius:3%;
+    box-shadow: 0px 0px 10px rgb(42, 42, 46);
+  
+}
+
+.lesson-container{
+ 
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    margin:50px 100px;
+
+}
+.card-image{
+    height:50%;
+    width: 100%;
+}
+
+.card-image img{
+width: 100%;
+    height: 100%;
+        object-fit: cover;
+    
+    
+}
+.search-container{
+display: flex;
+align-items: left;
+justify-content: right;
+margin-bottom: 25px; 
+padding: 25px;
+}
+
+.card-text{
+    padding-left: 1rem;
+}
+
+.card-button{
+padding: 1rem;
+    text-align: end;
+}
+
+.card-button  button{
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.sort-section {
+    display: flex;width:80%;
+margin: 0px auto; 
+}
+.sort-type{
+    display: flex;
+}
+.sort-type div {
+    padding: 10px 15px;
+}
+.sort-section .sort-type {
+    margin-right:auto;
+}
+
+.sort-section .sort-mode{
+    display: flex;
+}
+
+.sort-section .sort-mode div{
+    padding: 10px 15px;
+}
+
+
+
+  </style>
+  
