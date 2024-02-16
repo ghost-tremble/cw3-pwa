@@ -1,14 +1,12 @@
 <template>
    <div  class="lessonPage">
-        <div class="search-container">
-            <input type="search" placeholder="Type to Search Lessons" v-model="searchText" />
-        </div>
+       
         <!-- Sort Tags -->
         <div class="sort-section">
         
             <div class="sort-type">
                 <div>
-                    <input type="radio" name="sort" value="subject" id="option1" v-model="sortType" /> <label
+                    <input type="radio" name="sort" value="topic" id="option1" v-model="sortType" /> <label
                         for="option1">Subject</label>
                 </div>
                 <div>
@@ -42,17 +40,35 @@
         
         
         </div>
-        
+      
         <!-- Lessons section -->
-        <div class="lesson-container">
-            <div class="image-card" v-for="(lesson,key) in lessons" :key="key">
-                <div class="card-image"> <img :src="lesson.image" />
+        <div>
+            <div v-if="searchText.length  > 0" class="lesson-container">
+                <div class="image-card" v-for="(lesson,key) in searchResults" :key="key">
+                    <div class="card-image"> <img :src="server +lesson.image" /></div>
+                    <div class="card-text">
+            <!-- eslint-disable-next-line vue/no-use-v-if-with-v-for -->
+                        <div v-for="(value, key) in lesson" :key="key" v-if="!['_id','image'].includes(key)">
+                            <h4 v-if="key ==='price'">{{ key }}: ${{ value }}</h4>
+                            <h4 v-else>{{ key }}: {{ value }}</h4>
+                        </div>
+            
+                    </div>
+                    <div class="card-button"><button v-bind:disabled="lesson.spaces < 1" v-on:click="addToCart(lesson)">Add to
+                            cart</button></div>
+            
+                </div>
+
+            </div>
+
+            <div v-else class="lesson-container">
+            <div class="image-card" v-for="(lesson,key) in sortedLessons" :key="key">
+                <div class="card-image">  <img :src="server +lesson.image" />
                
                 </div>
                 <div class="card-text">
-        
                     <!-- eslint-disable-next-line vue/no-use-v-if-with-v-for -->
-                    <div v-for="(value, key) in lesson" :key="key" v-if="!['id','image'].includes(key)">
+                    <div v-for="(value, key) in lesson" :key="key" v-if="!['_id','image'].includes(key)">
                         <h4 v-if="key ==='price'">{{ key }}: ${{ value }}</h4>
                         <h4 v-else>{{ key }}: {{ value }}</h4>
                     </div>
@@ -63,6 +79,8 @@
         
             </div>
         </div>
+        </div>
+      
      </div> 
      
   </template>
@@ -70,13 +88,38 @@
   <script>
   export default {
     name: 'HelloWorld',
-    props :["lessons"],
+    props :["lessons","server","searchText","searchResults"],
+    data() {
+        return{
+
+            sortType: "topic",
+    mode: "ascending",
+        }
+    },
     methods:{
         // EVEVT Emitter
         RemoveLesson :()=>{
             this.$emit("RemoveLesson");
         }
-    }
+    },
+
+    computed: {
+    sortedLessons:  function () {
+      let order = this.mode === "ascending" ? 1 : -1;
+      return this.lessons?.slice()
+        .sort((a, b) => {
+          if (
+            typeof a[this.sortType] === "string" &&
+            typeof b[this.sortType] === "string"
+          ) {
+            return order * a[this.sortType].localeCompare(b[this.sortType]);
+          } else {
+            return order * (a[this.sortType] - b[this.sortType]);
+          }
+        });
+    },
+}
+    
   }
   </script>
   

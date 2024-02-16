@@ -10,37 +10,81 @@
                 <path
                     d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
             </svg>
-    <p>{{cart.length}}</p>
+    <p>{{cart.length}} </p>
        </button>
+
+       <div class="search-container">
+            <input type="search" placeholder="Type to Search Lessons" v-model="searchText" />
+        </div>
 
 <!-- // listen for event here 
 // event emitters -->
 
-       <!-- <LessonComponent :lessons="lessons" @removeLesson = "removeLesson"/> -->
-   <CheckoutComponent :lessons="lessons"/>
+       <LessonComponent :lessons="lessons" :server="apiServer" :searchResults="searchResults" :searchText="searchText"  @removeLesson = "removeLesson"/>
+   <!-- <CheckoutComponent :lessons="lessons"/> -->
   </div>
 </template>
 
 <script>
-// import Lesson from './components/Lesson.vue';
-import lessons  from  "./lessons"
-import Checkout from './components/Checkout.vue';
+import Lesson from './components/Lesson.vue';
+
+import {getLessons, localServer,searchLessons} from "./Api/services"
+// import Checkout from './components/Checkout.vue';
 export default {
   name: 'App',
   data() {
     return {
       cart: [],
-      lessons:lessons,
-      msg: 'Welcome to Your Vue.js App'
+      lessons:[],
+      apiServer:localServer,
+    
+    query: "",
+    searchText: "",
+    searchResults:[],
+      
     }
   },
-  components: {
-    // LessonComponent :Lesson,
-    CheckoutComponent :Checkout
-    
-    
-  
-  }
+  watch: {
+    searchText: function (newSearchText) {
+      if (newSearchText.length > 0) {
+        this.searchLessons();
+      } else {
+        this.searchResults = [];
+      }
+    },
+  },
+  methods:{
+
+    async searchLessons() {
+      if (this.searchText.length > 0) {
+        try {
+          // Use await to wait for the searchLessons promise to resolve
+          const data = await searchLessons(this.searchText);
+          this.searchResults = data;
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          this.searchResults = []; // Handle errors as needed
+        }
+      } else {
+        // If search text is empty, reset the searchResults
+        this.searchResults = [];
+      }
+    },
+  },
+
+
+  mounted() {
+    getLessons().then((data)=>{
+this.lessons = data
+    })
+  },
+
+  // Register Components Here 
+  components: {  
+    LessonComponent :Lesson,
+    // CheckoutComponent :Checkout
+  },
+ 
 }
 </script>
 
