@@ -54,7 +54,7 @@
                         </div>
             
                     </div>
-                    <div class="card-button"><button v-bind:disabled="lesson.spaces < 1" v-on:click="addToCart(lesson)">Add to
+                    <div class="card-button"><button v-bind:disabled="lesson.spaces < 1" @click="addToCart(lesson)">Add to
                             cart</button></div>
             
                 </div>
@@ -98,8 +98,8 @@
     },
     methods:{
         // EVEVT Emitter
-        RemoveLesson :()=>{
-            this.$emit("RemoveLesson");
+        addToCart(lesson){
+            this.$emit("add-item-to-cart",lesson);
         }
     },
 

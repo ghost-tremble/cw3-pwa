@@ -2,7 +2,7 @@
   <div id="app">  
     <h1>After School Activities</h1>
     <!-- Disabling the cart only on the lesson Page -->
-    <button class="cart">   
+    <button class="cart" v-bind:disabled ="cart.length < 1 && rendered !== 'CheckoutComponent'" @click="switchPage()">   
             <h3>Cart</h3>
            
             <svg xmlns="http://www.w3.org/2000/svg"
@@ -13,14 +13,20 @@
     <p>{{cart.length}} </p>
        </button>
 
-       <div class="search-container">
+       <div v-if="rendered==='LessonComponent'" class="search-container">
             <input type="search" placeholder="Type to Search Lessons" v-model="searchText" />
         </div>
 
 <!-- // listen for event here 
 // event emitters -->
+<!-- emits add to cart custom event -->
 
-       <LessonComponent :lessons="lessons" :server="apiServer" :searchResults="searchResults" :searchText="searchText"  @removeLesson = "removeLesson"/>
+
+
+<!-- Dynamic component Rendering -->
+<component :is="rendered" :lessons="lessons" :server="apiServer" :searchResults="searchResults" :searchText="searchText"  @add-item-to-cart = "addToCart"  :cart="cart" @remove-item-from-cart="removeFromCart"/>
+
+      
    <!-- <CheckoutComponent :lessons="lessons"/> -->
   </div>
 </template>
@@ -29,7 +35,7 @@
 import Lesson from './components/Lesson.vue';
 
 import {getLessons, localServer,searchLessons} from "./Api/services"
-// import Checkout from './components/Checkout.vue';
+import Checkout from './components/Checkout.vue';
 export default {
   name: 'App',
   data() {
@@ -41,6 +47,7 @@ export default {
     query: "",
     searchText: "",
     searchResults:[],
+    rendered:"LessonComponent"
       
     }
   },
@@ -55,6 +62,14 @@ export default {
   },
   methods:{
 
+    switchPage(){
+   if (this.rendered === "LessonComponent"){
+     this.rendered = "CheckoutComponent";
+   }
+   else {
+    this.rendered = "LessonComponent"
+   }
+    },
     async searchLessons() {
       if (this.searchText.length > 0) {
         try {
@@ -70,6 +85,27 @@ export default {
         this.searchResults = [];
       }
     },
+
+    addToCart: function (lesson) {
+      let lessonInCart = this.cart.find((item) => item._id === lesson._id);
+      // check if lesson is already in cart
+      if (lessonInCart) {
+        lessonInCart.spaces += 1;
+      } else {
+        this.cart = [...this.cart, { ...lesson, spaces: 1 }];
+      }
+      lesson.spaces--;
+    },
+    removeFromCart: function (lesson) {
+      let lessonInLessons = this.lessons.find((item) => item._id === lesson._id);
+      // remove the item if spaces less than zero
+      if (lesson.spaces <= 1) {
+        this.cart = this.cart.filter((item) => item._id !== lesson._id);
+      } else {
+        lesson.spaces -= 1;
+      }
+      lessonInLessons.spaces += 1;
+    },
   },
 
 
@@ -81,8 +117,8 @@ this.lessons = data
 
   // Register Components Here 
   components: {  
-    LessonComponent :Lesson,
-    // CheckoutComponent :Checkout
+    "LessonComponent" :Lesson,
+   "CheckoutComponent" :Checkout
   },
  
 }
