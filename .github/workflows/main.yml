@@ -34,4 +34,4 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: gh-pages  # Change this to the branch you want to deploy to
-          folder: dist  # The folder the action should deploy
+          folder: ./gh-pages  # The folder the action should deploy
