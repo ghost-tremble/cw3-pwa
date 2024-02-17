@@ -7,10 +7,9 @@ import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { ExpirationPlugin } from 'workbox-expiration';
 
 // Ensure that __WB_MANIFEST is defined as an array of objects
-self.__WB_MANIFEST = [].concat(self.__WB_MANIFEST || []);
 
 // Precache local files and set up routes
-precacheAndRoute(self.__WB_MANIFEST);
+precacheAndRoute([].concat(self.__WB_MANIFEST || []));
 
 // Cache Vue.js library from a CDN
 registerRoute(
