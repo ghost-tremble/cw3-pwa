@@ -2,7 +2,7 @@
     "name": "cw3-lessons-app",
     "short_name": "cw3-pwa",
     "description": "submission to luca for course work three",
-    "start_url": "/",
+    "start_url": "/cw3-pwa/",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#eef",
