@@ -1,6 +1,6 @@
 export const localServer = "http://localhost:5000"
-// const remoteServer = "https://cw-lessons.eu-north-1.elasticbeanstalk.com"
-export const base_url =  `${localServer}/api/v1`
+export const remoteServer = "https://cw-lessons.eu-north-1.elasticbeanstalk.com"
+export const base_url =  `${remoteServer}/api/v1`
 
 // Returns all lessons from the db
  export const getLessons  =  async ()=>{

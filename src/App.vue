@@ -34,7 +34,7 @@
 <script>
 import Lesson from './components/Lesson.vue';
 
-import {getLessons, localServer,searchLessons} from "./Api/services"
+import {getLessons, localServer,searchLessons,remoteServer} from "./Api/services"
 import Checkout from './components/Checkout.vue';
 export default {
   name: 'App',
@@ -42,7 +42,7 @@ export default {
     return {
       cart: [],
       lessons:[],
-      apiServer:localServer,
+      apiServer:remoteServer || localServer,
     
     query: "",
     searchText: "",
