@@ -1,6 +1,6 @@
 <template>
   <div id="app">  
-    <h1>After School Activities</h1>
+    <h1>After School Activity</h1>
     <!-- Disabling the cart only on the lesson Page -->
     <button class="cart" v-bind:disabled ="cart.length < 1 && rendered !== 'CheckoutComponent'" @click="switchPage()">   
             <h3>Cart</h3>
