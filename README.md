@@ -1,24 +1,8 @@
-# cw3-pwa
+CW3 SFC Application 
+- for cw3
 
-## Project setup
-```
-npm install
-```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+PWA Vue.js SFC App GitHub Repository : https://github.com/ghost-tremble/cw3-pwa
 
-### Compiles and minifies for production
-```
-npm run build
-```
+PWA Vue.js SFC App GitHub Pages Url :  https://ghost-tremble.github.io/cw3-pwa/
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
