@@ -1,70 +1,48 @@
-// src/registerServiceWorker.js
+var cacheName = "afterschool-v1";
+var cacheFiles = [
+    "index.html",
+];
 
-import { precacheAndRoute } from 'workbox-precaching';
-
-import { CacheFirst, StaleWhileRevalidate } from 'workbox-strategies';
-import { registerRoute } from 'workbox-routing';
-import { CacheableResponsePlugin } from 'workbox-cacheable-response';
-import { ExpirationPlugin } from 'workbox-expiration';
-
-// Ensure that __WB_MANIFEST is defined as an array of objects
-
-// Precache local files and set up routes
-precacheAndRoute([].concat(self.__WB_MANIFEST || []));
-
-// Cache Vue.js library from a CDN
-registerRoute(
-  /^https:\/\/cdn\.jsdelivr\.net\/npm\/vue@\d+\.\d+\.\d+\/dist\/vue\.js$/,
-  new CacheFirst({
-    cacheName: 'vue-library-cache',
-  })
-);
-
-// Cache images from specific API requests
-registerRoute(
-  /^https:\/\/cw-lessons\.eu-north-1\.elasticbeanstalk\.com\/images\/(.*)$/,
-  new CacheFirst({
-    cacheName: 'api-images-cache',
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [200],
-      }),
-      new ExpirationPlugin({
-        maxEntries: 50,
-        maxAgeSeconds: 7 * 24 * 60 * 60,
-      }),
-    ],
-  })
-);
-
-// Cache API request data using StaleWhileRevalidate strategy
-registerRoute(
-  /^https:\/\/cw-lessons\.eu-north-1\.elasticbeanstalk\.com\/api\/v1\/lessons$/,
-  new StaleWhileRevalidate({
-    cacheName: 'api-data-cache',
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [200],
-      }),
-      new ExpirationPlugin({
-        maxEntries: 50,
-        maxAgeSeconds: 60 * 60,
-      }),
-    ],
-  })
-);
-
-// Serve cached files for all routes
-registerRoute(
-  ({ request }) => {
-    return (
-      request.destination === 'script' ||
-      request.destination === 'style' ||
-      request.destination === 'document' ||
-      request.destination === 'image'
+// Install event
+self.addEventListener('install', function(e) {
+    console.log("[Service Worker] Install");
+    e.waitUntil(
+        caches.open(cacheName).then(function(cache) {
+            console.log("[Service Worker] Caching files");
+            return cache.addAll(cacheFiles)
+            .catch(function(error) {
+                console.error('Failed to cache files:', error);
+            });
+        })
     );
-  },
-  new StaleWhileRevalidate({
-    cacheName: 'app-cache',
-  })
-);
+});
+
+// Activate event
+self.addEventListener('activate', function() {
+    console.log('Service worker activated');
+});
+
+// Fetch event
+self.addEventListener('fetch', function(event) {
+    if (event.request.url.startsWith('https://') 
+    && !event.request.url.includes('/api/')) {
+        event.respondWith(
+            caches.match(event.request).then(function(cachedResponse) {
+                if (cachedResponse) {
+                    console.log("[Service Worker] Resource fetched from the cache for: " + event.request.url);
+                    return cachedResponse;
+                } else {
+                    return fetch(event.request).then(function(response) {
+                        // Clone the response before caching
+                        var responseToCache = response.clone();
+                        caches.open(cacheName).then(function(cache) {
+                            cache.put(event.request, responseToCache);
+                            console.log("[Service Worker] Resource fetched and saved in the cache for: " + event.request.url);
+                        });
+                        return response;
+                    });
+                }
+            })
+        );
+    } 
+});

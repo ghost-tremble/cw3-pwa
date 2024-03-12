@@ -107,8 +107,11 @@ export default {
       lessonInLessons.spaces += 1;
     },
   },
-
-
+  created: function(){
+    if ("serviceWorker" in navigator ) {
+      navigator.serviceWorker.register("service-worker.js")
+    }
+  },
   mounted() {
     getLessons().then((data)=>{
 this.lessons = data
