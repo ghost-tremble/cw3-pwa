@@ -19,7 +19,7 @@ registerRoute(
     cacheName: 'vue-library-cache',
   })
 );
-
+// ...
 // Cache images from specific API requests
 registerRoute(
   /^https:\/\/cw-lessons\.eu-north-1\.elasticbeanstalk\.com\/images\/(.*)$/,
