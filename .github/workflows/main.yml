@@ -3,7 +3,7 @@ name: Build and Deploy Vue Application to Github Pages
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build_deploy_vue:
